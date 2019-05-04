@@ -78,7 +78,7 @@ function rsyncAll() {
 function tarUp() {
     SERVER=$1
 
-    if [ ! -d $BACKUP_DIR/$SERVER/current ]
+    if [ ! -d $BACKUP_DIR/$SERVER/current ]; then
         echo "No backup for $SERVER has been found"
         return
     fi
