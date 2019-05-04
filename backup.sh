@@ -12,7 +12,7 @@ function dumpMysql() {
     SERVER=$1
     PWD=$2
 
-    ssh -p 222 -i "$KEY" root@"$SERVER" "mysqldump --password=${PWD} -A > /root/mysql/databases.sql"
+    ssh -p $SSH_PORT -i "$KEY_DIR/$SERVER.key" root@"$SERVER" "mysqldump --password=${PWD} -A > /root/mysql/databases.sql"
 }
 
 function dumpAllMysql() {
