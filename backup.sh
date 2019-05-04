@@ -10,11 +10,16 @@ function printHelp() {
 
 function dumpMysql() {
     SERVER=$1
-    PORT=$2
-    KEY=$3
-    PWD=$4
+    PWD=$2
 
-    ssh -p $PORT -i $KEY root@$SERVER "mysqldump --password=${PWD} -A > /root/mysql/databases.sql"
+    ssh -p 222 -i "$KEY" root@"$SERVER" "mysqldump --password=${PWD} -A > /root/mysql/databases.sql"
+}
+
+function dumpAllMysql() {
+    for ((i=0;i<${#MYSQL_HOSTS[@]};++i)); do
+        echo "Dumping MySQL database on ${MYSQL_HOSTS[i]}..."
+        dumpMysql "${MYSQL_HOSTS[i]}" "${MYSQL_PASS[i]}"
+    done
 }
 
 function rsync() {
@@ -33,6 +38,7 @@ if [ "$MODE" == "cron" ]; then
     echo "cron"
 elif [ "$MODE" == "mysql" ]; then
     echo "Dumping MySQL databases"
+    dumpAllMysql
 else
     printHelp
     exit 1
