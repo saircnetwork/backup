@@ -27,7 +27,19 @@ function rsyncDownload() {
     SERVER=$1
     HOST=$2
 
-    # TODO check if current exists
+    if [ ! -d $BACKUP_DIR/$SERVER ]; then
+        echo "Making directory for $SERVER..."
+        mkdir $BACKUP_DIR/$SERVER
+    fi
+
+    if [ ! -d $BACKUP_DIR/$SERVER/daily.0 ]; then
+        mkdir $BACKUP_DIR/$SERVER/daily.0
+    fi
+
+    if [ ! -d $BACKUP_DIR/$SERVER/current ]; then
+        echo "Link to current does not exist. Creating it..."
+        ln -s $BACKUP_DIR/$SERVER/daily.0 $BACKUP_DIR/$SERVER/current
+    fi
 
     rsync -aqz --delete --include=/etc --include=/home --include=/root --include=/usr --include=/var --exclude=/* --link-dest=$BACKUP_DIR/$SERVER/current -e "ssh -p $SSH_PORT -i $KEY_DIR/$SERVER.key" root@$HOST:/ $BACKUP_DIR/$SERVER/latest
     echo $?
