@@ -27,8 +27,12 @@ function rsync() {
 MODE=$1
 shift
 
+. $PWD/backup.config
+
 if [ "$MODE" == "cron" ]; then
     echo "cron"
+elif [ "$MODE" == "mysql" ]; then
+    echo "Dumping MySQL databases"
 else
     printHelp
     exit 1
