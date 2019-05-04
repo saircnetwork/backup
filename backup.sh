@@ -41,8 +41,31 @@ function rsyncDownload() {
         ln -s $BACKUP_DIR/$SERVER/daily.0 $BACKUP_DIR/$SERVER/current
     fi
 
-    rsync -aqz --delete --include=/etc --include=/home --include=/root --include=/usr --include=/var --exclude=/* --link-dest=$BACKUP_DIR/$SERVER/current -e "ssh -p $SSH_PORT -i $KEY_DIR/$SERVER.key" root@$HOST:/ $BACKUP_DIR/$SERVER/latest
+    rsync -aPqz --delete --include=/etc --include=/home --include=/root --include=/usr --include=/var --exclude=/* --link-dest=$BACKUP_DIR/$SERVER/current -e "ssh -p $SSH_PORT -i $KEY_DIR/$SERVER.key" root@$HOST:/ $BACKUP_DIR/$SERVER/latest
     echo $?
+
+    if [ -d $BACKUP_DIR/$SERVER/daily.6 ]; then
+        rm -rf $BACKUP_DIR/$SERVER/daily.6
+    fi
+    if [ -d $BACKUP_DIR/$SERVER/daily.5 ]; then
+        mv $BACKUP_DIR/$SERVER/daily.5 $BACKUP_DIR/$SERVER/daily.6
+    fi
+    if [ -d $BACKUP_DIR/$SERVER/daily.4 ]; then
+        mv $BACKUP_DIR/$SERVER/daily.4 $BACKUP_DIR/$SERVER/daily.5
+    fi
+    if [ -d $BACKUP_DIR/$SERVER/daily.3 ]; then
+        mv $BACKUP_DIR/$SERVER/daily.3 $BACKUP_DIR/$SERVER/daily.4
+    fi
+    if [ -d $BACKUP_DIR/$SERVER/daily.2 ]; then
+        mv $BACKUP_DIR/$SERVER/daily.2 $BACKUP_DIR/$SERVER/daily.3
+    fi
+    if [ -d $BACKUP_DIR/$SERVER/daily.1 ]; then
+        mv $BACKUP_DIR/$SERVER/daily.1 $BACKUP_DIR/$SERVER/daily.2
+    fi
+    if [ -d $BACKUP_DIR/$SERVER/daily.0 ]; then
+        mv $BACKUP_DIR/$SERVER/daily.0 $BACKUP_DIR/$SERVER/daily.1
+    fi
+    mv $BACKUP_DIR/$SERVER/latest $BACKUP_DIR/$SERVER/daily.0
 }
 
 function rsyncAll() {
