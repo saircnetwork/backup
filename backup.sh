@@ -28,6 +28,7 @@ MODE=$1
 shift
 
 if [ "$MODE" == "cron" ]; then
+    echo "cron"
 else
     printHelp
     exit 1
