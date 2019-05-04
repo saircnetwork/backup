@@ -23,10 +23,21 @@ function dumpAllMysql() {
     done
 }
 
-function rsync() {
+function rsyncDownload() {
     SERVER=$1
-    PORT=$2
-    KEY=$3
+    HOST=$2
+
+    # TODO check if current exists
+
+    rsync -aqz --delete --include=/etc --include=/home --include=/root --include=/usr --include=/var --exclude=/* --link-dest=$BACKUP_DIR/$SERVER/current -e "ssh -p $SSH_PORT -i $KEY_DIR/$SERVER.key" root@$HOST:/ $BACKUP_DIR/$SERVER/latest
+    echo $?
+}
+
+function rsyncAll() {
+    for ((i=0;i<${#SERVERS[@]};++i)); do
+        echo "Downloading from ${SERVERS[i]}..."
+        rsyncDownload "${SERVERS[i]}" "${SERVER_HOSTS[i]}"
+    done
 }
 
 # Parse commandline args
@@ -40,6 +51,9 @@ if [ "$MODE" == "cron" ]; then
 elif [ "$MODE" == "mysql" ]; then
     echo "Dumping MySQL databases"
     dumpAllMysql
+elif [ "$MODE" == "rsync" ]; then
+    echo "Downloading all files"
+    rsyncAll
 else
     printHelp
     exit 1
