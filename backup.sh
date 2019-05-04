@@ -75,6 +75,25 @@ function rsyncAll() {
     done
 }
 
+function tarUp() {
+    SERVER=$1
+
+    if [ ! -d $BACKUP_DIR/$SERVER/current ]
+        echo "No backup for $SERVER has been found"
+        return
+    fi
+
+    tar -zcpf $BACKUP_DIR/$SERVER/weekly.tar.gz --directory=$BACKUP_DIR/$SERVER/current . & sleep 5 && cpulimit -e gzip -l 20 -z
+    echo $?
+}
+
+function tarAll() {
+    for ((i=0;i<${#SERVERS[@]};++i)); do
+        echo "Taring latest backup for ${SERVERS[i]}..."
+        tarUp "${SERVERS[i]}"
+    done
+}
+
 # Parse commandline args
 MODE=$1
 shift
@@ -89,6 +108,9 @@ elif [ "$MODE" == "mysql" ]; then
 elif [ "$MODE" == "rsync" ]; then
     echo "Downloading all files"
     rsyncAll
+elif [ "$MODE" == "tar" ]; then
+    echo "Taring latest backups"
+    tarAll
 else
     printHelp
     exit 1
