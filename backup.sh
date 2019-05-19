@@ -83,7 +83,7 @@ function tarUp() {
         return
     fi
 
-    tar -zcpf $BACKUP_DIR/$SERVER/weekly.tar.gz --directory=$BACKUP_DIR/$SERVER/current . & sleep 5 && cpulimit -e gzip -l 20 -z
+    sudo tar -zcpf $BACKUP_DIR/$SERVER/weekly.tar.gz --directory=$BACKUP_DIR/$SERVER/current . & sleep 5 && cpulimit -e gzip -l 20 -z
     echo $?
 }
 
