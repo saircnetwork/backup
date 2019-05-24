@@ -45,27 +45,27 @@ function rsyncDownload() {
     echo $?
 
     if [ -d $BACKUP_DIR/$SERVER/daily.6 ]; then
-        rm -rf $BACKUP_DIR/$SERVER/daily.6
+        sudo rm -rf $BACKUP_DIR/$SERVER/daily.6
     fi
     if [ -d $BACKUP_DIR/$SERVER/daily.5 ]; then
-        mv $BACKUP_DIR/$SERVER/daily.5 $BACKUP_DIR/$SERVER/daily.6
+        sudo mv $BACKUP_DIR/$SERVER/daily.5 $BACKUP_DIR/$SERVER/daily.6
     fi
     if [ -d $BACKUP_DIR/$SERVER/daily.4 ]; then
-        mv $BACKUP_DIR/$SERVER/daily.4 $BACKUP_DIR/$SERVER/daily.5
+        sudo mv $BACKUP_DIR/$SERVER/daily.4 $BACKUP_DIR/$SERVER/daily.5
     fi
     if [ -d $BACKUP_DIR/$SERVER/daily.3 ]; then
-        mv $BACKUP_DIR/$SERVER/daily.3 $BACKUP_DIR/$SERVER/daily.4
+        sudo mv $BACKUP_DIR/$SERVER/daily.3 $BACKUP_DIR/$SERVER/daily.4
     fi
     if [ -d $BACKUP_DIR/$SERVER/daily.2 ]; then
-        mv $BACKUP_DIR/$SERVER/daily.2 $BACKUP_DIR/$SERVER/daily.3
+        sudo mv $BACKUP_DIR/$SERVER/daily.2 $BACKUP_DIR/$SERVER/daily.3
     fi
     if [ -d $BACKUP_DIR/$SERVER/daily.1 ]; then
-        mv $BACKUP_DIR/$SERVER/daily.1 $BACKUP_DIR/$SERVER/daily.2
+        sudo mv $BACKUP_DIR/$SERVER/daily.1 $BACKUP_DIR/$SERVER/daily.2
     fi
     if [ -d $BACKUP_DIR/$SERVER/daily.0 ]; then
-        mv $BACKUP_DIR/$SERVER/daily.0 $BACKUP_DIR/$SERVER/daily.1
+        sudo mv $BACKUP_DIR/$SERVER/daily.0 $BACKUP_DIR/$SERVER/daily.1
     fi
-    mv $BACKUP_DIR/$SERVER/latest $BACKUP_DIR/$SERVER/daily.0
+    sudo mv $BACKUP_DIR/$SERVER/latest $BACKUP_DIR/$SERVER/daily.0
 }
 
 function rsyncAll() {
