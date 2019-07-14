@@ -98,7 +98,9 @@ function tarAll() {
 MODE=$1
 shift
 
-. $PWD/backup.config
+DIRECTORY=$(cd `dirname $0` && pwd)
+
+. $DIRECTORY/backup.config
 
 if [ "$MODE" == "cron" ]; then
     dumpAllMysql
