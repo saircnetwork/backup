@@ -9,13 +9,13 @@ LIFETIME=${lifetime:-2}
 
 case $1 in
     config)
-        cat <<'EOF'
+        cat <<EOF
 graph_title Fresh files
-graph_info Number of fresh (<=${LIFETIME}d) updated files in ${BACKUP_DIR}
+graph_info Number of fresh (<=$LIFETIME days old) updated files in $BACKUP_DIR
 graph_args -l 0
 graph_category backup
 graph_vlabel freshcount
-freshcount.label Files fresher than ${LIFETIME}d
+freshcount.label Files fresher than $LIFETIME days old
 EOF
         exit 0;;
 esac
