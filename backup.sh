@@ -25,7 +25,8 @@ function dumpAllMysql() {
 
 function rsyncDownload() {
     SERVER=$1
-    HOST=$2
+    USER=$2
+    HOST=$3
 
     if [ ! -d $BACKUP_DIR/$SERVER ]; then
         echo "Making directory for $SERVER..."
@@ -41,7 +42,16 @@ function rsyncDownload() {
         ln -s $BACKUP_DIR/$SERVER/daily.0 $BACKUP_DIR/$SERVER/current
     fi
 
-    sudo rsync -amz --stats --delete --include=/etc --include=/home --include=/root --include=/usr --include=/var --exclude=/* --link-dest=$BACKUP_DIR/$SERVER/current -e "ssh -4 -p $SSH_PORT -i $KEY_DIR/$SERVER.key" root@$HOST:/ $BACKUP_DIR/$SERVER/latest
+    PARAMS=(-amz --stats --delete --include=/etc --include=/home --include=/root --include=/usr --include=/var --exclude=/* --link-dest=$BACKUP_DIR/$SERVER/current)
+    PARAMS+=(-e "ssh -4 -p $SSH_PORT -i $KEY_DIR/$SERVER.key" $USER@$HOST:/ $BACKUP_DIR/$SERVER/latest)
+
+    if [ "$USER" != "root" ]; then
+        PARAMS+=(--rsync-path="sudo rsync")
+    fi
+
+    echo "rsync params"
+    echo "${PARAMS[@]}"
+    sudo rsync "${PARAMS[@]}"
     echo $?
 
     if [ -d $BACKUP_DIR/$SERVER/daily.6 ]; then
@@ -71,7 +81,7 @@ function rsyncDownload() {
 function rsyncAll() {
     for ((i=0;i<${#SERVERS[@]};++i)); do
         echo "Downloading from ${SERVERS[i]}..."
-        rsyncDownload "${SERVERS[i]}" "${SERVER_HOSTS[i]}"
+        rsyncDownload "${SERVERS[i]}" "${SERVER_USER[i]}" "${SERVER_HOSTS[i]}"
     done
 }
 
@@ -105,6 +115,7 @@ DIRECTORY=$(cd `dirname $0` && pwd)
 if [ "$MODE" == "cron" ]; then
     dumpAllMysql
     rsyncAll
+    #rsyncDownload "${SERVERS[4]}" "${SERVER_USER[4]}" "${SERVER_HOSTS[4]}"
     # TODO: tar
 elif [ "$MODE" == "mysql" ]; then
     echo "Dumping MySQL databases"
