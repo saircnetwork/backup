@@ -21,15 +21,22 @@ EOF
 esac
 
 TOTAL=0
-for path in "$BACKUP_DIR"/*; do
-    if [ -d $path ]; then
-        DIR="${path}/current"
+if [ $(date +%M) == 00 ]; then
+    for path in "$BACKUP_DIR"/*; do
+        if [ -d $path ]; then
+            DIR="${path}/current"
 
-        if [ -d $DIR ]; then
-            COUNT=$(find "${DIR}/" -mtime "-${LIFETIME}" | wc -l)
-            TOTAL=$(($TOTAL+$COUNT))
+            if [ -d $DIR ]; then
+                COUNT=$(find "${DIR}/" -mtime "-${LIFETIME}" | wc -l)
+                TOTAL=$(($TOTAL+$COUNT))
+                echo "${TOTAL}" > "${BACKUP_DIR}/count"
+            fi
         fi
+    done
+else
+    if [ -f "${BACKUP_DIR}/count" ]; then
+        TOTAL=$(<"${BACKUP_DIR}/count")
     fi
-done
+fi
 
 echo "freshcount.value ${TOTAL}"
