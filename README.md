@@ -6,8 +6,8 @@ is compressed into an archive.
 This script requires Python 3 and Fabric 2.6.0.
 
 Fabric can be installed using
-`pip install fabric
+`pip install fabric`
 
 ## Cron backup
 The cron backup can be ran from the directory by running
-`fab cron
+`fab cron`
